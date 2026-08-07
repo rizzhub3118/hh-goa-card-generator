@@ -1,4 +1,6 @@
 'use client'
+import { FaInstagram } from "react-icons/fa";
+import { FaLinkedin } from "react-icons/fa";
 import Cropper from "react-easy-crop";
 import Image from "next/image";
 import { useCallback, useRef, useState } from 'react'
@@ -91,18 +93,86 @@ export function CardGenerator() {
     }
   }, [name, mode])
 
-  const handleShare = useCallback(() => {
-    const text = encodeURIComponent(
-      `I'm an official Builder at HH Goa 2026! ${name ? `— ${name} ` : ''}#FrameInGoa #HHGoa2026`,
-    )
-    window.open(
-      `https://twitter.com/intent/tweet?text=${text}`,
-      '_blank',
-      'noopener,noreferrer',
-    )
-  }, [name])
+  const handleShare = useCallback(async () => {
+  if (!cardRef.current) return;
 
-  return (
+  try {
+    const dataUrl = await toPng(cardRef.current, {
+      pixelRatio: 2,
+      cacheBust: true,
+    });
+
+    const response = await fetch("/api/upload", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        image: dataUrl,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (!result.success) {
+      alert("Upload failed.");
+      return;
+    }
+
+    const text = encodeURIComponent(
+      `I'm an official Builder at HH Goa 2026! ${
+        name ? `— ${name} ` : ""
+      } #FramedInGoa #HHGoa2026`
+    );
+
+    const shareUrl = encodeURIComponent(result.url);
+
+    window.open(
+      `https://twitter.com/intent/tweet?text=${text}&url=${shareUrl}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  } catch (err) {
+    console.error(err);
+    alert("Unable to share.");
+  }
+}, [name]);
+
+const handleLinkedInShare = useCallback(() => {
+  const text = encodeURIComponent(
+    `I'm an official Builder at HH Goa 2026! ${
+      name ? `— ${name} ` : ""
+    } #FramedInGoa`
+  );
+
+  window.open(
+    `https://www.linkedin.com/feed/?shareActive=true&text=${text}`,
+    "_blank",
+    "noopener,noreferrer"
+  );
+}, [name]);
+
+const handleInstagramShare = useCallback(async () => {
+  try {
+    // Download the generated image
+    await handleDownload();
+
+    // Copy caption
+    const caption = `I'm an official Builder at HH Goa 2026! ${
+      name ? `— ${name} ` : ""
+    }#FramedInGoa #HHGoa2026`;
+
+    await navigator.clipboard.writeText(caption);
+
+    // Open Instagram
+    window.open("https://www.instagram.com/", "_blank");
+  } catch (err) {
+    console.error(err);
+    alert("Couldn't prepare Instagram post.");
+  }
+}, [handleDownload, name]);
+
+return (
     <div className="relative overflow-hidden flex flex-col gap-14">
       {/* ---------------- Header ---------------- */}
       {/* Background Glow */}
@@ -398,7 +468,7 @@ className="absolute top-0 right-0 w-72 h-72 opacity-[0.06] pointer-events-none"
           </div>
 
           {/* Bottom actions */}
-          <div className="flex w-full max-w-sm flex-col gap-3 sm:flex-row">
+          <div className="grid w-full max-w-2xl grid-cols-2 gap-3">
             <button
               type="button"
               onClick={handleDownload}
@@ -420,6 +490,24 @@ className="absolute top-0 right-0 w-72 h-72 opacity-[0.06] pointer-events-none"
               <XLogo className="h-4 w-4" />
               Share to X
             </button>
+
+            <button
+  type="button"
+  onClick={handleLinkedInShare}
+  className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-[#0A66C2]/30 bg-[#0A66C2]/10 px-5 py-3.5 text-sm font-bold text-white transition-all hover:bg-[#0A66C2]/20 active:scale-[0.98]"
+>
+  <FaLinkedin className="h-4 w-4" />
+  Share to LinkedIn
+</button>
+
+<button
+  type="button"
+  onClick={handleInstagramShare}
+  className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-pink/30 bg-pink/10 px-5 py-3.5 text-sm font-bold text-white transition-all hover:bg-pink/20 active:scale-[0.98]"
+>
+  <FaInstagram className="h-4 w-4" />
+  Share to Instagram
+</button>
           </div>
         </div>
       </div>
