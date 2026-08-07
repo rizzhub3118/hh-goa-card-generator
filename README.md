@@ -94,12 +94,6 @@ http://localhost:3000
 
 ---
 
-## 📸 Screenshots
-
-> Add screenshots of the Builder Card and Profile Frame here.
-
----
-
 ## 📌 Built For
 
 Hacker House Goa 2026 Builder Card Challenge
