@@ -146,7 +146,7 @@ export const BuilderCard = forwardRef<HTMLDivElement, CardData>(
             <MapPin className="h-3.5 w-3.5 text-yellow" />
             Goa, India
           </div>
-          <p className="text-sm font-bold tracking-tight text-pink">#FramedInGoa</p>
+          <p className="text-sm font-bold tracking-tight text-pink">#FrameInGoa</p>
         </div>
       </div>
     )
@@ -203,7 +203,7 @@ export const ProfileFrame = forwardRef<HTMLDivElement, CardData>(
           HH Goa 2026 · Builder
         </div>
 
-        <p className="mt-3 text-sm font-bold tracking-tight text-pink">#FramedInGoa</p>
+        <p className="mt-3 text-sm font-bold tracking-tight text-pink">#FrameInGoa</p>
       </div>
     )
   },

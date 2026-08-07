@@ -122,7 +122,7 @@ export function CardGenerator() {
     const text = encodeURIComponent(
       `I'm an official Builder at HH Goa 2026! ${
         name ? `— ${name} ` : ""
-      } #FramedInGoa #HHGoa2026`
+      } #FrameInGoa #HHGoa2026`
     );
 
     const shareUrl = encodeURIComponent(result.url);
@@ -142,7 +142,7 @@ const handleLinkedInShare = useCallback(() => {
   const text = encodeURIComponent(
     `I'm an official Builder at HH Goa 2026! ${
       name ? `— ${name} ` : ""
-    } #FramedInGoa`
+    } #FrameInGoa`
   );
 
   window.open(
@@ -160,9 +160,10 @@ const handleInstagramShare = useCallback(async () => {
     // Copy caption
     const caption = `I'm an official Builder at HH Goa 2026! ${
       name ? `— ${name} ` : ""
-    }#FramedInGoa #HHGoa2026`;
+    }#FrameInGoa #HHGoa2026`;
 
     await navigator.clipboard.writeText(caption);
+    alert("Image downloaded! Caption copied. Upload the image to Instagram and paste the caption.");
 
     // Open Instagram
     window.open("https://www.instagram.com/", "_blank");
